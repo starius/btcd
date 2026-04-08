@@ -33,6 +33,8 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
+replace github.com/btcsuite/btcd/chaincfg/chainhash => ./chaincfg/chainhash
+
 // The retract statements below fixes an accidental push of the tags of a btcd
 // fork.
 retract (
