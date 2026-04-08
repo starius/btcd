@@ -167,7 +167,7 @@ func (r FutureGetBestBlockResult) Receive() (*chainhash.Hash, int32, error) {
 	}
 
 	// Convert to hash from string.
-	hash, err := chainhash.NewHashFromStr(bestBlock.Hash)
+	hash, err := chainhash.NewHashFromStrStrict(bestBlock.Hash)
 	if err != nil {
 		return nil, 0, err
 	}

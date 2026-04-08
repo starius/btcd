@@ -33,7 +33,7 @@ func (r FutureGetBestBlockHashResult) Receive() (*chainhash.Hash, error) {
 	if err != nil {
 		return nil, err
 	}
-	return chainhash.NewHashFromStr(txHashStr)
+	return chainhash.NewHashFromStrStrict(txHashStr)
 }
 
 // GetBestBlockHashAsync returns an instance of a type that can be used to get
@@ -564,7 +564,7 @@ func (r FutureGetBlockHashResult) Receive() (*chainhash.Hash, error) {
 	if err != nil {
 		return nil, err
 	}
-	return chainhash.NewHashFromStr(txHashStr)
+	return chainhash.NewHashFromStrStrict(txHashStr)
 }
 
 // GetBlockHashAsync returns an instance of a type that can be used to get the
@@ -784,7 +784,7 @@ func (r FutureGetRawMempoolResult) Receive() ([]*chainhash.Hash, error) {
 	// Create a slice of ShaHash arrays from the string slice.
 	txHashes := make([]*chainhash.Hash, 0, len(txHashStrs))
 	for _, hashStr := range txHashStrs {
-		txHash, err := chainhash.NewHashFromStr(hashStr)
+		txHash, err := chainhash.NewHashFromStrStrict(hashStr)
 		if err != nil {
 			return nil, err
 		}
@@ -1264,7 +1264,7 @@ func (r FutureGetCFilterHeaderResult) Receive() (*wire.MsgCFHeaders, error) {
 	}
 
 	// Assign the decoded header into a hash
-	headerHash, err := chainhash.NewHashFromStr(headerHex)
+	headerHash, err := chainhash.NewHashFromStrStrict(headerHex)
 	if err != nil {
 		return nil, err
 	}

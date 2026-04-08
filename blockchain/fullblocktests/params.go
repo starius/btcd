@@ -19,7 +19,7 @@ import (
 // it panics on an error since it will only (and must only) be called with
 // hard-coded, and therefore known good, hashes.
 func newHashFromStr(hexStr string) *chainhash.Hash {
-	hash, err := chainhash.NewHashFromStr(hexStr)
+	hash, err := chainhash.NewHashFromStrStrict(hexStr)
 	if err != nil {
 		panic(err)
 	}

@@ -1256,7 +1256,7 @@ func HDPrivateKeyToPublicKeyID(id []byte) ([]byte, error) {
 // it panics on an error since it will only (and must only) be called with
 // hard-coded, and therefore known good, hashes.
 func newHashFromStr(hexStr string) *chainhash.Hash {
-	hash, err := chainhash.NewHashFromStr(hexStr)
+	hash, err := chainhash.NewHashFromStrStrict(hexStr)
 	if err != nil {
 		// Ordinarily I don't like panics in library code since it
 		// can take applications down without them having a chance to

@@ -37,7 +37,7 @@ func (r FutureGenerateResult) Receive() ([]*chainhash.Hash, error) {
 	// each.
 	convertedResult := make([]*chainhash.Hash, len(result))
 	for i, hashString := range result {
-		convertedResult[i], err = chainhash.NewHashFromStr(hashString)
+		convertedResult[i], err = chainhash.NewHashFromStrStrict(hashString)
 		if err != nil {
 			return nil, err
 		}
@@ -84,7 +84,7 @@ func (f FutureGenerateToAddressResult) Receive() ([]*chainhash.Hash, error) {
 	// each.
 	convertedResult := make([]*chainhash.Hash, len(result))
 	for i, hashString := range result {
-		convertedResult[i], err = chainhash.NewHashFromStr(hashString)
+		convertedResult[i], err = chainhash.NewHashFromStrStrict(hashString)
 		if err != nil {
 			return nil, err
 		}

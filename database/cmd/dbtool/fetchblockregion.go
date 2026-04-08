@@ -44,7 +44,7 @@ func (cmd *blockRegionCmd) Execute(args []string) error {
 	}
 
 	// Parse arguments.
-	blockHash, err := chainhash.NewHashFromStr(args[0])
+	blockHash, err := chainhash.NewHashFromStrStrict(args[0])
 	if err != nil {
 		return err
 	}

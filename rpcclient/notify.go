@@ -514,7 +514,7 @@ func parseChainNtfnParams(params []json.RawMessage) (*chainhash.Hash,
 	}
 
 	// Create hash from block hash string.
-	blockHash, err := chainhash.NewHashFromStr(blockHashStr)
+	blockHash, err := chainhash.NewHashFromStrStrict(blockHashStr)
 	if err != nil {
 		return nil, 0, time.Time{}, err
 	}
@@ -707,7 +707,7 @@ func parseRescanProgressParams(params []json.RawMessage) (*chainhash.Hash, int32
 	}
 
 	// Decode string encoding of block hash.
-	hash, err := chainhash.NewHashFromStr(hashStr)
+	hash, err := chainhash.NewHashFromStrStrict(hashStr)
 	if err != nil {
 		return nil, 0, time.Time{}, err
 	}
@@ -745,7 +745,7 @@ func parseTxAcceptedNtfnParams(params []json.RawMessage) (*chainhash.Hash,
 	}
 
 	// Decode string encoding of transaction sha.
-	txHash, err := chainhash.NewHashFromStr(txHashStr)
+	txHash, err := chainhash.NewHashFromStrStrict(txHashStr)
 	if err != nil {
 		return nil, 0, err
 	}

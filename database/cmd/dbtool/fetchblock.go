@@ -31,7 +31,7 @@ func (cmd *fetchBlockCmd) Execute(args []string) error {
 	if len(args) < 1 {
 		return errors.New("required block hash parameter not specified")
 	}
-	blockHash, err := chainhash.NewHashFromStr(args[0])
+	blockHash, err := chainhash.NewHashFromStrStrict(args[0])
 	if err != nil {
 		return err
 	}

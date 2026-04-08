@@ -532,14 +532,16 @@ func (g *GetTxOutSetInfoResult) UnmarshalJSON(data []byte) error {
 	}
 
 	// Step 4: Convert the raw fields to the desired types
-	blockHash, err := chainhash.NewHashFromStr(aux.BestBlock)
+	blockHash, err := chainhash.NewHashFromStrStrict(aux.BestBlock)
 	if err != nil {
 		return err
 	}
 
 	g.BestBlock = *blockHash
 
-	serializedHash, err := chainhash.NewHashFromStr(aux.HashSerialized)
+	serializedHash, err := chainhash.NewHashFromStrStrict(
+		aux.HashSerialized,
+	)
 	if err != nil {
 		return err
 	}

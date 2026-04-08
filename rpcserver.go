@@ -538,7 +538,7 @@ func handleCreateRawTransaction(s *rpcServer, cmd interface{}, closeChan <-chan 
 	// some validity checks.
 	mtx := wire.NewMsgTx(wire.TxVersion)
 	for _, input := range c.Inputs {
-		txHash, err := chainhash.NewHashFromStr(input.Txid)
+		txHash, err := chainhash.NewHashFromStrStrict(input.Txid)
 		if err != nil {
 			return nil, rpcDecodeHexError(input.Txid)
 		}
@@ -1075,7 +1075,7 @@ func handleGetBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 	c := cmd.(*btcjson.GetBlockCmd)
 
 	// Load the raw block bytes from the database.
-	hash, err := chainhash.NewHashFromStr(c.Hash)
+	hash, err := chainhash.NewHashFromStrStrict(c.Hash)
 	if err != nil {
 		return nil, rpcDecodeHexError(c.Hash)
 	}
@@ -1344,7 +1344,7 @@ func handleGetBlockHeader(s *rpcServer, cmd interface{}, closeChan <-chan struct
 	c := cmd.(*btcjson.GetBlockHeaderCmd)
 
 	// Fetch the header from chain.
-	hash, err := chainhash.NewHashFromStr(c.Hash)
+	hash, err := chainhash.NewHashFromStrStrict(c.Hash)
 	if err != nil {
 		return nil, rpcDecodeHexError(c.Hash)
 	}
@@ -1424,7 +1424,7 @@ func decodeTemplateID(templateID string) (*chainhash.Hash, int64, error) {
 		return nil, 0, errors.New("invalid longpollid format")
 	}
 
-	prevHash, err := chainhash.NewHashFromStr(fields[0])
+	prevHash, err := chainhash.NewHashFromStrStrict(fields[0])
 	if err != nil {
 		return nil, 0, errors.New("invalid longpollid format")
 	}
@@ -2232,7 +2232,7 @@ func handleGetCFilter(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) 
 	}
 
 	c := cmd.(*btcjson.GetCFilterCmd)
-	hash, err := chainhash.NewHashFromStr(c.Hash)
+	hash, err := chainhash.NewHashFromStrStrict(c.Hash)
 	if err != nil {
 		return nil, rpcDecodeHexError(c.Hash)
 	}
@@ -2261,7 +2261,7 @@ func handleGetCFilterHeader(s *rpcServer, cmd interface{}, closeChan <-chan stru
 	}
 
 	c := cmd.(*btcjson.GetCFilterHeaderCmd)
-	hash, err := chainhash.NewHashFromStr(c.Hash)
+	hash, err := chainhash.NewHashFromStrStrict(c.Hash)
 	if err != nil {
 		return nil, rpcDecodeHexError(c.Hash)
 	}
@@ -2319,7 +2319,9 @@ func handleGetHeaders(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) 
 	// block locators and stop hash.
 	blockLocators := make([]*chainhash.Hash, len(c.BlockLocators))
 	for i := range c.BlockLocators {
-		blockLocator, err := chainhash.NewHashFromStr(c.BlockLocators[i])
+		blockLocator, err := chainhash.NewHashFromStrStrict(
+			c.BlockLocators[i],
+		)
 		if err != nil {
 			return nil, rpcDecodeHexError(c.BlockLocators[i])
 		}
@@ -2327,7 +2329,7 @@ func handleGetHeaders(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) 
 	}
 	var hashStop chainhash.Hash
 	if c.HashStop != "" {
-		err := chainhash.Decode(&hashStop, c.HashStop)
+		err := chainhash.DecodeStrict(&hashStop, c.HashStop)
 		if err != nil {
 			return nil, rpcDecodeHexError(c.HashStop)
 		}
@@ -2625,7 +2627,7 @@ func handleGetRawTransaction(s *rpcServer, cmd interface{}, closeChan <-chan str
 	c := cmd.(*btcjson.GetRawTransactionCmd)
 
 	// Convert the provided transaction hash hex to a Hash.
-	txHash, err := chainhash.NewHashFromStr(c.Txid)
+	txHash, err := chainhash.NewHashFromStrStrict(c.Txid)
 	if err != nil {
 		return nil, rpcDecodeHexError(c.Txid)
 	}
@@ -2744,7 +2746,7 @@ func handleGetTxOut(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 	c := cmd.(*btcjson.GetTxOutCmd)
 
 	// Convert the provided transaction hash hex to a Hash.
-	txHash, err := chainhash.NewHashFromStr(c.Txid)
+	txHash, err := chainhash.NewHashFromStrStrict(c.Txid)
 	if err != nil {
 		return nil, rpcDecodeHexError(c.Txid)
 	}
@@ -2859,7 +2861,7 @@ func handleGetTxOut(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (i
 func handleInvalidateBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (interface{}, error) {
 	c := cmd.(*btcjson.InvalidateBlockCmd)
 
-	invalidateHash, err := chainhash.NewHashFromStr(c.BlockHash)
+	invalidateHash, err := chainhash.NewHashFromStrStrict(c.BlockHash)
 	if err != nil {
 		return nil, &btcjson.RPCError{
 			Code: btcjson.ErrRPCDeserialization,
@@ -3149,7 +3151,7 @@ func fetchMempoolTxnsForAddress(s *rpcServer, addr btcutil.Address, numToSkip, n
 func handleReconsiderBlock(s *rpcServer, cmd interface{}, closeChan <-chan struct{}) (interface{}, error) {
 	c := cmd.(*btcjson.ReconsiderBlockCmd)
 
-	reconsiderHash, err := chainhash.NewHashFromStr(c.BlockHash)
+	reconsiderHash, err := chainhash.NewHashFromStrStrict(c.BlockHash)
 	if err != nil {
 		return nil, &btcjson.RPCError{
 			Code: btcjson.ErrRPCDeserialization,
@@ -3928,7 +3930,7 @@ func handleGetTxSpendingPrevOut(s *rpcServer, cmd interface{},
 	// Convert the outpoints.
 	ops := make([]wire.OutPoint, 0, len(c.Outputs))
 	for _, o := range c.Outputs {
-		hash, err := chainhash.NewHashFromStr(o.Txid)
+		hash, err := chainhash.NewHashFromStrStrict(o.Txid)
 		if err != nil {
 			return nil, err
 		}

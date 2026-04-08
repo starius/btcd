@@ -353,7 +353,7 @@ func newCheckpointFromStr(checkpoint string) (chaincfg.Checkpoint, error) {
 		return chaincfg.Checkpoint{}, fmt.Errorf("unable to parse "+
 			"checkpoint %q due to missing hash", checkpoint)
 	}
-	hash, err := chainhash.NewHashFromStr(parts[1])
+	hash, err := chainhash.NewHashFromStrStrict(parts[1])
 	if err != nil {
 		return chaincfg.Checkpoint{}, fmt.Errorf("unable to parse "+
 			"checkpoint %q due to malformed hash", checkpoint)

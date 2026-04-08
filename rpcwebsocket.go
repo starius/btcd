@@ -2071,7 +2071,9 @@ func handleLoadTxFilter(wsc *wsClient, icmd interface{}) (interface{}, error) {
 
 	outPoints := make([]wire.OutPoint, len(cmd.OutPoints))
 	for i := range cmd.OutPoints {
-		hash, err := chainhash.NewHashFromStr(cmd.OutPoints[i].Hash)
+		hash, err := chainhash.NewHashFromStrStrict(
+			cmd.OutPoints[i].Hash,
+		)
 		if err != nil {
 			return nil, &btcjson.RPCError{
 				Code:    btcjson.ErrRPCInvalidParameter,
@@ -2247,7 +2249,9 @@ func checkAddressValidity(addrs []string, params *chaincfg.Params) error {
 func deserializeOutpoints(serializedOuts []btcjson.OutPoint) ([]*wire.OutPoint, error) {
 	outpoints := make([]*wire.OutPoint, 0, len(serializedOuts))
 	for i := range serializedOuts {
-		blockHash, err := chainhash.NewHashFromStr(serializedOuts[i].Hash)
+		blockHash, err := chainhash.NewHashFromStrStrict(
+			serializedOuts[i].Hash,
+		)
 		if err != nil {
 			return nil, rpcDecodeHexError(serializedOuts[i].Hash)
 		}
@@ -2512,7 +2516,7 @@ func handleRescanBlocks(wsc *wsClient, icmd interface{}) (interface{}, error) {
 	blockHashes := make([]*chainhash.Hash, len(cmd.BlockHashes))
 
 	for i := range cmd.BlockHashes {
-		hash, err := chainhash.NewHashFromStr(cmd.BlockHashes[i])
+		hash, err := chainhash.NewHashFromStrStrict(cmd.BlockHashes[i])
 		if err != nil {
 			return nil, err
 		}
@@ -2814,7 +2818,9 @@ func handleRescan(wsc *wsClient, icmd interface{}) (interface{}, error) {
 	outpoints := make([]*wire.OutPoint, 0, len(cmd.OutPoints))
 	for i := range cmd.OutPoints {
 		cmdOutpoint := &cmd.OutPoints[i]
-		blockHash, err := chainhash.NewHashFromStr(cmdOutpoint.Hash)
+		blockHash, err := chainhash.NewHashFromStrStrict(
+			cmdOutpoint.Hash,
+		)
 		if err != nil {
 			return nil, rpcDecodeHexError(cmdOutpoint.Hash)
 		}
@@ -2843,7 +2849,7 @@ func handleRescan(wsc *wsClient, icmd interface{}) (interface{}, error) {
 
 	chain := wsc.server.cfg.Chain
 
-	minBlockHash, err := chainhash.NewHashFromStr(cmd.BeginBlock)
+	minBlockHash, err := chainhash.NewHashFromStrStrict(cmd.BeginBlock)
 	if err != nil {
 		return nil, rpcDecodeHexError(cmd.BeginBlock)
 	}
@@ -2857,7 +2863,9 @@ func handleRescan(wsc *wsClient, icmd interface{}) (interface{}, error) {
 
 	maxBlock := int32(math.MaxInt32)
 	if cmd.EndBlock != nil {
-		maxBlockHash, err := chainhash.NewHashFromStr(*cmd.EndBlock)
+		maxBlockHash, err := chainhash.NewHashFromStrStrict(
+			*cmd.EndBlock,
+		)
 		if err != nil {
 			return nil, rpcDecodeHexError(*cmd.EndBlock)
 		}

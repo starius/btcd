@@ -182,7 +182,9 @@ func (s *SubmitPackageResult) UnmarshalJSON(data []byte) error {
 			var dstTxRes SubmitPackageTxResult
 
 			// Translate TxID.
-			txID, err := chainhash.NewHashFromStr(srcTxRes.TxID)
+			txID, err := chainhash.NewHashFromStrStrict(
+				srcTxRes.TxID,
+			)
 			if err != nil {
 				return fmt.Errorf("failed to parse txid '%s' "+
 					"for wtxid '%s': %w", srcTxRes.TxID,
@@ -198,7 +200,7 @@ func (s *SubmitPackageResult) UnmarshalJSON(data []byte) error {
 			if srcTxRes.OtherWtxid != nil &&
 				*srcTxRes.OtherWtxid != "" {
 
-				otherWtxidHash, err := chainhash.NewHashFromStr(
+				otherWtxidHash, err := chainhash.NewHashFromStrStrict(
 					*srcTxRes.OtherWtxid,
 				)
 				if err != nil {
@@ -223,7 +225,7 @@ func (s *SubmitPackageResult) UnmarshalJSON(data []byte) error {
 		)
 
 		for _, txidStr := range src.ReplacedTransactions {
-			hash, err := chainhash.NewHashFromStr(txidStr)
+			hash, err := chainhash.NewHashFromStrStrict(txidStr)
 			if err != nil {
 				return fmt.Errorf("failed to parse "+
 					"replaced_transaction txid '%s': %w",

@@ -234,7 +234,7 @@ func NewOutPointFromString(outpoint string) (*OutPoint, error) {
 		return nil, errors.New("outpoint txid should be 64 hex chars")
 	}
 
-	hash, err := chainhash.NewHashFromStr(parts[0])
+	hash, err := chainhash.NewHashFromStrStrict(parts[0])
 	if err != nil {
 		return nil, err
 	}

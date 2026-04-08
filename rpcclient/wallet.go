@@ -454,7 +454,7 @@ func (r FutureListLockUnspentResult) Receive() ([]*wire.OutPoint, error) {
 	// Create a slice of outpoints from the transaction input structs.
 	ops := make([]*wire.OutPoint, len(inputs))
 	for i, input := range inputs {
-		sha, err := chainhash.NewHashFromStr(input.Txid)
+		sha, err := chainhash.NewHashFromStrStrict(input.Txid)
 		if err != nil {
 			return nil, err
 		}
@@ -528,7 +528,7 @@ func (r FutureSendToAddressResult) Receive() (*chainhash.Hash, error) {
 		return nil, err
 	}
 
-	return chainhash.NewHashFromStr(txHash)
+	return chainhash.NewHashFromStrStrict(txHash)
 }
 
 // SendToAddressAsync returns an instance of a type that can be used to get the
@@ -607,7 +607,7 @@ func (r FutureSendFromResult) Receive() (*chainhash.Hash, error) {
 		return nil, err
 	}
 
-	return chainhash.NewHashFromStr(txHash)
+	return chainhash.NewHashFromStrStrict(txHash)
 }
 
 // SendFromAsync returns an instance of a type that can be used to get the
@@ -715,7 +715,7 @@ func (r FutureSendManyResult) Receive() (*chainhash.Hash, error) {
 		return nil, err
 	}
 
-	return chainhash.NewHashFromStr(txHash)
+	return chainhash.NewHashFromStrStrict(txHash)
 }
 
 // SendManyAsync returns an instance of a type that can be used to get the

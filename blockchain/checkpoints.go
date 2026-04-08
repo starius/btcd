@@ -23,7 +23,7 @@ const CheckpointConfirmations = 2016
 // it ignores the error since it will only (and must only) be called with
 // hard-coded, and therefore known good, hashes.
 func newHashFromStr(hexStr string) *chainhash.Hash {
-	hash, _ := chainhash.NewHashFromStr(hexStr)
+	hash, _ := chainhash.NewHashFromStrStrict(hexStr)
 	return hash
 }
 

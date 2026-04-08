@@ -331,7 +331,7 @@ func (r FutureSendRawTransactionResult) Receive() (*chainhash.Hash, error) {
 		return nil, err
 	}
 
-	return chainhash.NewHashFromStr(txHashStr)
+	return chainhash.NewHashFromStrStrict(txHashStr)
 }
 
 // SendRawTransactionAsync returns an instance of a type that can be used to get
