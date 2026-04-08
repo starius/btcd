@@ -110,7 +110,8 @@ func TestHashString(t *testing.T) {
 	}
 }
 
-// TestNewHashFromStr executes tests against the NewHashFromStr function.
+// TestNewHashFromStr executes compatibility tests against the lenient
+// NewHashFromStr function.
 func TestNewHashFromStr(t *testing.T) {
 	tests := []struct {
 		in   string
@@ -193,6 +194,130 @@ func TestNewHashFromStr(t *testing.T) {
 			t.Errorf(unexpectedResultStr, i, result, &test.want)
 			continue
 		}
+	}
+}
+
+// TestNewHashFromStrStrict executes tests against the NewHashFromStrStrict
+// function.
+func TestNewHashFromStrStrict(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		want Hash
+		err  error
+	}{
+		{
+			name: "genesis hash",
+			in:   "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+			want: mainNetGenesisHash,
+			err:  nil,
+		},
+		{
+			name: "stripped leading zeros",
+			in:   "19d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+			want: Hash{},
+			err:  ErrHashStrSizeMismatch,
+		},
+		{
+			name: "odd length hash",
+			in:   "1",
+			want: Hash{},
+			err:  ErrHashStrSizeMismatch,
+		},
+		{
+			name: "empty string",
+			in:   "",
+			want: Hash{},
+			err:  ErrHashStrSizeMismatch,
+		},
+		{
+			name: "hash string that is too long",
+			in:   "01234567890123456789012345678901234567890123456789012345678912345",
+			want: Hash{},
+			err:  ErrHashStrSizeMismatch,
+		},
+		{
+			name: "hash string that contains non-hex chars",
+			in:   "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26g",
+			want: Hash{},
+			err:  hex.InvalidByteError('g'),
+		},
+	}
+
+	unexpectedErrStr := "NewHashFromStrStrict #%d failed to detect expected error - got: %v want: %v"
+	unexpectedResultStr := "NewHashFromStrStrict #%d got: %v want: %v"
+	t.Logf("Running %d tests", len(tests))
+	for i, test := range tests {
+		test := test
+
+		t.Run(test.name, func(t *testing.T) {
+			result, err := NewHashFromStrStrict(test.in)
+			if err != test.err {
+				t.Errorf(unexpectedErrStr, i, err, test.err)
+				return
+			} else if err != nil {
+				return
+			}
+			if !test.want.IsEqual(result) {
+				t.Errorf(unexpectedResultStr, i, result, &test.want)
+			}
+		})
+	}
+}
+
+// TestDecodeStrict executes tests against the DecodeStrict function.
+func TestDecodeStrict(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		want Hash
+		err  error
+	}{
+		{
+			name: "genesis hash",
+			in:   "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+			want: mainNetGenesisHash,
+			err:  nil,
+		},
+		{
+			name: "odd length hash",
+			in:   "1",
+			want: Hash{},
+			err:  ErrHashStrSizeMismatch,
+		},
+		{
+			name: "hash string that contains non-hex chars",
+			in:   "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26g",
+			want: Hash{},
+			err:  hex.InvalidByteError('g'),
+		},
+		{
+			name: "hash string that is too long",
+			in:   "01234567890123456789012345678901234567890123456789012345678912345",
+			want: Hash{},
+			err:  ErrHashStrSizeMismatch,
+		},
+	}
+
+	unexpectedErrStr := "DecodeStrict #%d failed to detect expected error - got: %v want: %v"
+	unexpectedResultStr := "DecodeStrict #%d got: %v want: %v"
+	t.Logf("Running %d tests", len(tests))
+	for i, test := range tests {
+		test := test
+
+		t.Run(test.name, func(t *testing.T) {
+			var result Hash
+			err := DecodeStrict(&result, test.in)
+			if err != test.err {
+				t.Errorf(unexpectedErrStr, i, err, test.err)
+				return
+			} else if err != nil {
+				return
+			}
+			if !test.want.IsEqual(&result) {
+				t.Errorf(unexpectedResultStr, i, &result, &test.want)
+			}
+		})
 	}
 }
 
